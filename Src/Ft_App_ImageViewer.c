@@ -381,7 +381,6 @@ ft_void_t Info()
   
   Ft_App_Init();
   Ft_DisplayLogo(phost);
-  // while(0!=Ft_Gpu_Hal_Rd16(phost,REG_CMD_READ)); 
   dloffset = Ft_Gpu_Hal_Rd16(phost,REG_CMD_DL);
   dloffset -= 4;
 
@@ -616,10 +615,6 @@ ft_void_t Loadimage2ram(ft_uint8_t bmphandle)
 	fflush(stdout);
 	Load_Jpeg();
 }
-
-
-
-
 
 ft_void_t Imageviewer()
 {
@@ -939,7 +934,6 @@ interrupt_enable_globally();
 }
 #endif
 
-
 #if defined MSVC_PLATFORM | defined FT900_PLATFORM
 /* Main entry point */
 ft_int32_t main(ft_int32_t argc,ft_char8_t *argv[])
@@ -948,8 +942,7 @@ ft_int32_t main(ft_int32_t argc,ft_char8_t *argv[])
 void setup(void)
 #endif
 {
-
-ft_uint8_t chipid;
+    ft_uint8_t chipid;
 #ifdef FT900_PLATFORM
 	FT900_Config();
 	    /* Check to see if a card is inserted */
@@ -957,9 +950,9 @@ ft_uint8_t chipid;
 	Ft_Gpu_HalInit_t halinit;
 	
 	halinit.TotalChannelNum = 1;
-
-              
+    // USB-to-SPI/I2C init
 	Ft_Gpu_Hal_Init(&halinit);
+    // Init host structure 
 	host.hal_config.channel_no = 0;
 	host.hal_config.pdn_pin_no = FT800_PD_N;
 	host.hal_config.spi_cs_pin_no = FT800_SEL_PIN;
@@ -971,6 +964,7 @@ ft_uint8_t chipid;
 #ifdef ARDUINO_PLATFORM_SPI
 	host.hal_config.spi_clockrate_khz = 4000; //in KHz
 #endif
+    // Init SPI interface
     Ft_Gpu_Hal_Open(&host);
     phost = &host;
 	Ft_BootupConfig();
@@ -983,8 +977,8 @@ ft_uint8_t chipid;
 #endif
 
     /*It is optional to clear the screen here*/	
-    Ft_Gpu_Hal_WrMem(phost, RAM_DL,(ft_uint8_t *)FT_DLCODE_BOOTUP,sizeof(FT_DLCODE_BOOTUP));
-    Ft_Gpu_Hal_Wr8(phost, REG_DLSWAP,DLSWAP_FRAME);
+    Ft_Gpu_Hal_WrMem(phost, RAM_DL, (ft_uint8_t *) FT_DLCODE_BOOTUP, sizeof(FT_DLCODE_BOOTUP));
+    Ft_Gpu_Hal_Wr8(phost, REG_DLSWAP, DLSWAP_FRAME);
     
     Ft_Gpu_Hal_Sleep(1000);//Show the booting up screen. 
 
