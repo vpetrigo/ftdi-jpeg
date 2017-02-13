@@ -1,0 +1,13 @@
+# C/C++ object files
+*.o
+*.obj
+# C/C++ output
+*.out
+*.exe
+
+# IDE build folders
+**/*Debug*/*
+**/*Release*/*
+
+# VS folder
+**/.vs/*
